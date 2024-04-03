@@ -1,5 +1,4 @@
 # Import module
-import time
 from tkinter import *
 from tkinter import ttk
 from PIL import ImageTk, Image
@@ -13,6 +12,7 @@ def startup():
 	STARTUP_FONT = ("TkDefaultFont", 12)
 
 	splash_root = Tk()
+	ttk.Style().theme_use("classic")
 	splash_root.geometry("{}x{}".format(STARTUP_WIDTH,STARTUP_HEIGHT))
 	splash_root.title("AOL Instant Messenger")
 
@@ -57,6 +57,7 @@ def destroy_startup(splash_root):
 
 def buddylist():
 	bd = Tk()
+	ttk.Style().theme_use("classic")
 	BUDDY_WIDTH = 275
 	BUDDY_HEIGHT = 575
 	IMAGE_WIDTH = 250
@@ -122,6 +123,7 @@ def open_chat(item_name):
 		WIN_HEIGHT = 200
 		WIN_WIDTH = 200
 		chat = Tk()
+		ttk.Style().theme_use("classic")
 		chat.geometry("{}x{}".format(WIN_WIDTH, WIN_HEIGHT))
 		chat.title(item_name)
 		ttk.Label(chat, text="My name is {}".format(item_name)).pack()
