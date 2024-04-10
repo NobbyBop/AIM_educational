@@ -4,6 +4,7 @@ from tkinter import ttk
 from PIL import ImageTk, Image
 
 global open_windows
+global msg_counts
 def startup():
 	STARTUP_WIDTH = 275
 	STARTUP_HEIGHT = 300
@@ -119,14 +120,9 @@ def buddy_clicked(event, tree):
 		if parent_text == "Experts" or parent_text == "Friends":
 			open_chat(item_name)
 def open_chat(item_name):
-	global i_msg
-	global n_msg
-	global n_res
+	global msg_counts
 	responses = []
 	messages = []
-	n_res = 0
-	n_msg = 0
-	i_msg = 0
 	if(item_name == "Historian"):
 		responses = [
 			"Hello, I am the historian, what would you like to know about?",
@@ -142,22 +138,41 @@ def open_chat(item_name):
 			"not implemented!"
 		]
 		messages = [
-			"not implemented"
+			"not implemented",
+			"still not implemented"
 		]
-	def update_input(event):
-		global i_msg
-		global n_msg
-		global n_res
-		inputText.configure(state='normal')
-		inputText.delete('1.0', 'end')
-		inputText.insert('end', messages[n_msg][0:i_msg])
-		i_msg = i_msg+1
+	def update_input(event, name):
+		global msg_counts
+		if msg_counts[name]["n_msg"] < len(messages):
+			inputText.configure(state='normal')
+			inputText.delete('1.0', 'end')
+			inputText.insert('end', messages[msg_counts[name]["n_msg"]][0:msg_counts[name]["i_msg"]])
+			msg_counts[name]["i_msg"] += 1
+
+			# If the current message is done being typed...
+			if msg_counts[name]["i_msg"] == len(messages[msg_counts[name]["n_msg"]]):
+				print("Getting ready to reset.")
+				msg_counts[name]["n_res"] += 1
+
+				text.configure(state='normal')
+				text.insert('end', "You: " + messages[msg_counts[name]["n_msg"]] + "\n")
+				text.insert('end', name + ": " + responses[msg_counts[name]["n_res"]] + "\n")
+				inputText.delete('1.0', 'end')
+				text.configure(state='disabled')
+
+				msg_counts[name]["i_msg"] = 0
+				msg_counts[name]["n_msg"] += 1
+
+
+
+
+
 		inputText.configure(state='disabled')
 
 	if not open_windows[item_name.lower()]:
+		open_windows[item_name.lower()] = True
 		WIN_HEIGHT = 500
 		WIN_WIDTH = 500
-		item_name = "Chat Window"  # Provide an appropriate item name
 
 		chat = Tk()
 		ttk.Style().theme_use("classic")
@@ -167,7 +182,9 @@ def open_chat(item_name):
 		mainframe = ttk.Frame(chat, padding="10 10 10 10")
 		mainframe.grid(column=0, row=0, sticky='nwes')
 
-		text = Text(mainframe, state='disabled')
+		text = Text(mainframe)
+		text.insert('end', item_name + ": " + responses[0] + "\n")
+		text.configure(state='disabled')
 		text.grid(column=0, row=0)
 
 		inputText = Text(mainframe, state='disabled')
@@ -176,7 +193,7 @@ def open_chat(item_name):
 		inputText.configure(state='disabled')
 		inputText.grid(column=0, row=1)
 
-		inputText.bind("<Key>", update_input)
+		inputText.bind("<Key>", lambda event: update_input(event, item_name))
 
 		send_button = Button(mainframe, text="Send")
 		send_button.grid(column=1, row=1)
@@ -201,5 +218,24 @@ if __name__ == "__main__":
 					"joe1": False,
 	   				"cyberninja82": False,
 					"susan_abc": False}
+	msg_counts = {"Historian":{"i_msg":0,
+							   "n_msg":0,
+							   "n_res":0},
+				  "Technician": {"i_msg": 0,
+								"n_msg": 0,
+								"n_res": 0},
+				  "Anthropologist": {"i_msg": 0,
+								"n_msg": 0,
+								"n_res": 0},
+				  "joe1": {"i_msg": 0,
+								"n_msg": 0,
+								"n_res": 0},
+				  "cyberninja82": {"i_msg": 0,
+								"n_msg": 0,
+								"n_res": 0},
+				  "Susan_abc": {"i_msg": 0,
+								"n_msg": 0,
+								"n_res": 0},
+				  }
 	# startup()
 	buddylist()
