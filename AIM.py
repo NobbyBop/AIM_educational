@@ -119,17 +119,72 @@ def buddy_clicked(event, tree):
 		if parent_text == "Experts" or parent_text == "Friends":
 			open_chat(item_name)
 def open_chat(item_name):
+	global i_msg
+	global n_msg
+	global n_res
+	responses = []
+	messages = []
+	n_res = 0
+	n_msg = 0
+	i_msg = 0
+	if(item_name == "Historian"):
+		responses = [
+			"Hello, I am the historian, what would you like to know about?",
+			"I am still learning, but I know it was awesome.",
+			"Of course, see you!"
+		]
+		messages = [
+			"I would love to know about AOL IM.",
+			"Thanks, that is really helpful..."
+		]
+	else:
+		responses = [
+			"not implemented!"
+		]
+		messages = [
+			"not implemented"
+		]
+	def update_input(event):
+		global i_msg
+		global n_msg
+		global n_res
+		inputText.configure(state='normal')
+		inputText.delete('1.0', 'end')
+		inputText.insert('end', messages[n_msg][0:i_msg])
+		i_msg = i_msg+1
+		inputText.configure(state='disabled')
+
 	if not open_windows[item_name.lower()]:
-		WIN_HEIGHT = 200
-		WIN_WIDTH = 200
+		WIN_HEIGHT = 500
+		WIN_WIDTH = 500
+		item_name = "Chat Window"  # Provide an appropriate item name
+
 		chat = Tk()
 		ttk.Style().theme_use("classic")
-		chat.geometry("{}x{}".format(WIN_WIDTH, WIN_HEIGHT))
+		# chat.geometry("{}x{}".format(WIN_WIDTH, WIN_HEIGHT))
 		chat.title(item_name)
-		ttk.Label(chat, text="My name is {}".format(item_name)).pack()
+
+		mainframe = ttk.Frame(chat, padding="10 10 10 10")
+		mainframe.grid(column=0, row=0, sticky='nwes')
+
+		text = Text(mainframe, state='disabled')
+		text.grid(column=0, row=0)
+
+		inputText = Text(mainframe, state='disabled')
+		inputText.configure(state='normal')
+		inputText.insert('end', "Please begin typing...")
+		inputText.configure(state='disabled')
+		inputText.grid(column=0, row=1)
+
+		inputText.bind("<Key>", update_input)
+
+		send_button = Button(mainframe, text="Send")
+		send_button.grid(column=1, row=1)
+
 		open_windows[item_name.lower()] = True
 		chat.protocol("WM_DELETE_WINDOW", lambda: close_chat(chat, item_name))
 		chat.mainloop()
+
 	else:
 		print("The window is already open!")
 
@@ -146,5 +201,5 @@ if __name__ == "__main__":
 					"joe1": False,
 	   				"cyberninja82": False,
 					"susan_abc": False}
-	startup()
-	# buddylist()
+	# startup()
+	buddylist()
