@@ -15,7 +15,7 @@ def startup():
 	splash_root = Tk()
 	ttk.Style().theme_use("classic")
 	splash_root.geometry("{}x{}".format(STARTUP_WIDTH,STARTUP_HEIGHT))
-	splash_root.title("AOL Instant Messenger")
+	splash_root.title("AIM: Sign On")
 
 	mainframe = ttk.Frame(splash_root, padding = "10 10 10 10")
 	mainframe.grid(column=0, row=0, sticky='nwes')
@@ -24,7 +24,7 @@ def startup():
 
 	splash_image = Image.open("images/splash.png").resize((IMAGE_WIDTH, IMAGE_HEIGHT))
 	splash_image_tk = ImageTk.PhotoImage(splash_image)
-	ttk.Label(mainframe, image=splash_image_tk).grid(column=0,row=0)
+	ttk.Label(mainframe, image=splash_image_tk).grid(column=0, row=0)
 
 	separator = ttk.Separator(mainframe, orient='horizontal')
 	separator.grid(column=0, row=1, pady=10, sticky='ew')
@@ -66,7 +66,7 @@ def buddylist():
 	# BUDDY_FONT = ("TkDefaultFont", 12)
 
 	bd.geometry("{}x{}".format(BUDDY_WIDTH, BUDDY_HEIGHT))
-	bd.title("AOL Instant Messenger")
+	bd.title("AIM: Buddy List")
 	mainframe = ttk.Frame(bd, padding="10 10 10 10")
 	mainframe.grid(column=0, row=0, sticky='nwes')
 	bd.columnconfigure(0, weight=1)
@@ -121,11 +121,13 @@ def buddy_clicked(event, tree):
 			open_chat(item_name)
 def open_chat(item_name):
 	global msg_counts
+	IMAGE_WIDTH = 250
+	IMAGE_HEIGHT = 200
 	responses = []
 	messages = []
 	if(item_name == "Historian"):
 		responses = [
-			"Hello, I am the historian, what would you like to know about?",
+			"Hello, I am the historian, what would you like to know about? This is going to be a REALLY long message. Sorry about that.",
 			"I am still learning, but I know it was awesome.",
 			"Of course, see you!"
 		]
@@ -135,11 +137,11 @@ def open_chat(item_name):
 		]
 	else:
 		responses = [
-			"not implemented!"
+			"not implemented!",
+			"still not implemented"
 		]
 		messages = [
-			"not implemented",
-			"still not implemented"
+			"not implemented"
 		]
 	def update_input(event, name):
 		global msg_counts
@@ -150,8 +152,7 @@ def open_chat(item_name):
 			msg_counts[name]["i_msg"] += 1
 
 			# If the current message is done being typed...
-			if msg_counts[name]["i_msg"] == len(messages[msg_counts[name]["n_msg"]]):
-				print("Getting ready to reset.")
+			if msg_counts[name]["i_msg"] == len(messages[msg_counts[name]["n_msg"]])+2:
 				msg_counts[name]["n_res"] += 1
 
 				text.configure(state='normal')
@@ -163,42 +164,71 @@ def open_chat(item_name):
 				msg_counts[name]["i_msg"] = 0
 				msg_counts[name]["n_msg"] += 1
 
-
-
-
-
-		inputText.configure(state='disabled')
+			inputText.configure(state='disabled')
 
 	if not open_windows[item_name.lower()]:
-		open_windows[item_name.lower()] = True
-		WIN_HEIGHT = 500
-		WIN_WIDTH = 500
 
-		chat = Tk()
+		msg_counts[item_name]["i_msg"] = 0
+		msg_counts[item_name]["n_msg"] = 0
+		msg_counts[item_name]["n_res"] = 0
+		open_windows[item_name.lower()] = True
+		WIN_HEIGHT = 430
+		WIN_WIDTH = 780
+
+		chat = Toplevel()
+		chat.geometry("{}x{}".format(WIN_WIDTH, WIN_HEIGHT))
+
 		ttk.Style().theme_use("classic")
 		# chat.geometry("{}x{}".format(WIN_WIDTH, WIN_HEIGHT))
-		chat.title(item_name)
+		chat.title("AIM: Chat with " + item_name)
 
-		mainframe = ttk.Frame(chat, padding="10 10 10 10")
+		mainframe = ttk.Frame(chat)
 		mainframe.grid(column=0, row=0, sticky='nwes')
 
-		text = Text(mainframe)
+		splash_image = Image.open("images/splash.png").resize((IMAGE_WIDTH, IMAGE_HEIGHT))
+		splash_image_tk = ImageTk.PhotoImage(splash_image)
+		ttk.Label(mainframe, image=splash_image_tk, width=IMAGE_WIDTH).grid(column=0, row=0, sticky='n', pady=20, padx=10)
+
+		# radioFrame = ttk.Frame(mainframe, width=10,height=10)
+		# radioFrame.grid(column=0,row=1)
+		# fonts = ['Courier', 'Helvetica', 'Times']
+		#
+		# selected_font = StringVar(value=fonts[0])
+		# def update_font(*args):
+		# 	fnt_sizes = {'Helvetica': {'s':11, 'w':78, 'h':18,'ih':5},
+		# 				 'Times':{'s':11, 'w':89, 'h':18, 'ih':5},
+		# 				 'Courier':{'s':10, 'w':78, 'h':19, 'ih':5}}
+		# 	text.configure(font=(selected_font.get(), fnt_sizes[selected_font.get()]['s']))
+		# 	inputText.configure(font=(selected_font.get(), fnt_sizes[selected_font.get()]['s']))
+		# 	text.configure(width=fnt_sizes[selected_font.get()]['w'],
+		# 				   height=fnt_sizes[selected_font.get()]['h'])
+		# 	inputText.configure(width=fnt_sizes[selected_font.get()]['w'],
+		# 				   height=fnt_sizes[selected_font.get()]['ih'])
+		#
+		# selected_font.trace_add('write', update_font)
+		# for f in range(len(fonts)):
+		# 	rb = Radiobutton(radioFrame, text=fonts[f], variable=selected_font, value=fonts[f])
+		# 	rb.grid(column=0,row=f, sticky='nw')
+
+		text = Text(mainframe, width=60, height=15, wrap='word')
 		text.insert('end', item_name + ": " + responses[0] + "\n")
 		text.configure(state='disabled')
-		text.grid(column=0, row=0)
+		text.configure(font=("Times", 12))
+		text.grid(column=1, row=0, padx=10, pady=10, sticky='nwes')
 
-		inputText = Text(mainframe, state='disabled')
+		inputText = Text(mainframe, state='disabled',width=60, height=5,wrap='word')
 		inputText.configure(state='normal')
 		inputText.insert('end', "Please begin typing...")
 		inputText.configure(state='disabled')
-		inputText.grid(column=0, row=1)
+		inputText.configure(font=("Times", 12))
+		inputText.grid(column=1, row=1, padx=10, pady=10,sticky='nw')
 
 		inputText.bind("<Key>", lambda event: update_input(event, item_name))
 
-		send_button = Button(mainframe, text="Send")
-		send_button.grid(column=1, row=1)
+		# send_button = Button(mainframe, text="Send")
+		# send_button.grid(column=1, row=1)
 
-		open_windows[item_name.lower()] = True
+		chat.resizable(False, False)
 		chat.protocol("WM_DELETE_WINDOW", lambda: close_chat(chat, item_name))
 		chat.mainloop()
 
@@ -237,5 +267,5 @@ if __name__ == "__main__":
 								"n_msg": 0,
 								"n_res": 0},
 				  }
-	# startup()
-	buddylist()
+	startup()
+	# open_chat("Historian")
