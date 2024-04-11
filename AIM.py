@@ -2,6 +2,8 @@
 from tkinter import *
 from tkinter import ttk
 from PIL import ImageTk, Image
+from pygame import mixer
+import time
 
 global open_windows
 global msg_counts
@@ -156,17 +158,32 @@ def open_chat(item_name):
 				msg_counts[name]["n_res"] += 1
 
 				text.configure(state='normal')
-				text.insert('end', "You: " + messages[msg_counts[name]["n_msg"]] + "\n")
-				text.insert('end', name + ": " + responses[msg_counts[name]["n_res"]] + "\n")
 				inputText.delete('1.0', 'end')
+				if msg_counts[name]["n_msg"] > len(messages):
+					inputText.insert('end', "Please begin typing...", "Prompt")
+				else:
+					inputText.insert('end', "END OF CONVERSATION.", "Prompt")
+
+				text.insert('end', "You","You")
+				text.insert('end',": " + messages[msg_counts[name]["n_msg"]] + "\n")
+				text.insert('end', name, "Other")
+				text.insert('end', ": " + responses[msg_counts[name]["n_res"]] + "\n")
 				text.configure(state='disabled')
 
 				msg_counts[name]["i_msg"] = 0
 				msg_counts[name]["n_msg"] += 1
 
+				mixer.init()
+				sound = mixer.Sound("sounds/msg.mp3")
+				sound.play()
+
 			inputText.configure(state='disabled')
 
 	if not open_windows[item_name.lower()]:
+
+		mixer.init()
+		sound = mixer.Sound("sounds/msg.mp3")
+		sound.play()
 
 		msg_counts[item_name]["i_msg"] = 0
 		msg_counts[item_name]["n_msg"] = 0
@@ -185,40 +202,43 @@ def open_chat(item_name):
 		mainframe = ttk.Frame(chat)
 		mainframe.grid(column=0, row=0, sticky='nwes')
 
+		leftframe = ttk.Frame(mainframe)
+		leftframe.grid(column=0, row=0)
+
 		splash_image = Image.open("images/splash.png").resize((IMAGE_WIDTH, IMAGE_HEIGHT))
 		splash_image_tk = ImageTk.PhotoImage(splash_image)
-		ttk.Label(mainframe, image=splash_image_tk, width=IMAGE_WIDTH).grid(column=0, row=0, sticky='n', pady=20, padx=10)
+		ttk.Label(leftframe, image=splash_image_tk, width=IMAGE_WIDTH).grid(column=0, row=0, sticky='n', pady=10, padx=10)
 
-		# radioFrame = ttk.Frame(mainframe, width=10,height=10)
-		# radioFrame.grid(column=0,row=1)
-		# fonts = ['Courier', 'Helvetica', 'Times']
-		#
-		# selected_font = StringVar(value=fonts[0])
-		# def update_font(*args):
-		# 	fnt_sizes = {'Helvetica': {'s':11, 'w':78, 'h':18,'ih':5},
-		# 				 'Times':{'s':11, 'w':89, 'h':18, 'ih':5},
-		# 				 'Courier':{'s':10, 'w':78, 'h':19, 'ih':5}}
-		# 	text.configure(font=(selected_font.get(), fnt_sizes[selected_font.get()]['s']))
-		# 	inputText.configure(font=(selected_font.get(), fnt_sizes[selected_font.get()]['s']))
-		# 	text.configure(width=fnt_sizes[selected_font.get()]['w'],
-		# 				   height=fnt_sizes[selected_font.get()]['h'])
-		# 	inputText.configure(width=fnt_sizes[selected_font.get()]['w'],
-		# 				   height=fnt_sizes[selected_font.get()]['ih'])
-		#
-		# selected_font.trace_add('write', update_font)
-		# for f in range(len(fonts)):
-		# 	rb = Radiobutton(radioFrame, text=fonts[f], variable=selected_font, value=fonts[f])
-		# 	rb.grid(column=0,row=f, sticky='nw')
+		profileFrame = ttk.Frame(leftframe)
+		profileFrame.grid(column=0,row=1)
 
-		text = Text(mainframe, width=60, height=15, wrap='word')
-		text.insert('end', item_name + ": " + responses[0] + "\n")
+		other_image = Image.open("images/{}.png".format(item_name)).resize((75, 75))
+		other_image_tk = ImageTk.PhotoImage(other_image)
+		ttk.Label(profileFrame, image=other_image_tk, width=IMAGE_WIDTH).grid(column=0, row=0, sticky='n')
+		ttk.Label(profileFrame, text=item_name).grid(column=0, row=1, sticky='n')
+
+		you_image = Image.open("images/you.png").resize((75, 75))
+		you_image_tk = ImageTk.PhotoImage(you_image)
+		ttk.Label(profileFrame, image=you_image_tk, width=IMAGE_WIDTH).grid(column=0, row=2, sticky='n')
+		ttk.Label(profileFrame, text="You").grid(column=0, row=3, sticky='n')
+
+		rightframe = ttk.Frame(mainframe)
+		rightframe.grid(column=1, row=0)
+		text = Text(rightframe, width=60, height=15, wrap='word')
+		text.tag_config("You", foreground="blue")
+		text.tag_config("Other", foreground="red")
+
+		text.insert('end', item_name, "Other")
+		text.insert('end', ": " + responses[0] + "\n")
 		text.configure(state='disabled')
 		text.configure(font=("Times", 12))
 		text.grid(column=1, row=0, padx=10, pady=10, sticky='nwes')
 
-		inputText = Text(mainframe, state='disabled',width=60, height=5,wrap='word')
+		inputText = Text(rightframe, state='disabled',width=60, height=5,wrap='word')
+		inputText.tag_config("Prompt", foreground="gray")
 		inputText.configure(state='normal')
-		inputText.insert('end', "Please begin typing...")
+
+		inputText.insert('end', "Please begin typing...", "Prompt")
 		inputText.configure(state='disabled')
 		inputText.configure(font=("Times", 12))
 		inputText.grid(column=1, row=1, padx=10, pady=10,sticky='nw')
@@ -268,4 +288,3 @@ if __name__ == "__main__":
 								"n_res": 0},
 				  }
 	startup()
-	# open_chat("Historian")
