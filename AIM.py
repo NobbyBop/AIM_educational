@@ -1,9 +1,9 @@
-# Import module
 from tkinter import *
 from tkinter import ttk
 from PIL import ImageTk, Image
 from pygame import mixer
-import time
+import os
+import sys
 
 global open_windows
 global msg_counts
@@ -103,7 +103,7 @@ def buddylist():
 	tree.bind("<Double-1>", lambda event: buddy_clicked(event, tree))
 	tree.pack(expand=True, fill="both")
 
-	ttk.Label(tab2, text="Written and Programmed by:\nNicholas Messina\nNicholas Mirigliani\n\nSources:\nnone yet lol\n\n\n\n\n\ntest",
+	ttk.Label(tab2, text="Written and Programmed by:\nNicholas Messina\nNicholas Mirigliani\n\n",
 			  background="white", borderwidth=2, relief="solid", anchor="center").pack(expand=True, fill="both")
 	notebook.grid(column=0,row=3)
 
@@ -129,21 +129,116 @@ def open_chat(item_name):
 	messages = []
 	if(item_name == "Historian"):
 		responses = [
-			"Hello, I am the historian, what would you like to know about? This is going to be a REALLY long message. Sorry about that.",
-			"I am still learning, but I know it was awesome.",
-			"Of course, see you!"
+			"Good day. I am pleased to engage in discourse regarding the origins of AOL Instant Messenger (AIM).",
+			"Indeed, the genesis of AIM traces back to the early 1990s when AOL, or America Online, sought to capitalize on the burgeoning popularity of the internet. Recognizing the need for real-time communication, they introduced AIM in 1997, providing users with instant messaging capabilities.",
+			"In its nascent stages, AIM revolutionized online communication, offering users the ability to exchange messages instantaneously with friends and family, irrespective of geographical constraints. Its user-friendly interface and innovative features quickly garnered widespread adoption.",
+			"Precisely. AIM boasted an array of chatrooms catering to diverse interests, fostering communities centered around topics ranging from music to sports. These chatrooms facilitated interactions among users worldwide, epitomizing the democratization of digital communication.",
+			"Over the years, AIM underwent several iterations, introducing enhanced features such as file sharing, voice and video chat, and customizable profiles. However, with the advent of social media platforms and the proliferation of smartphones, AIM gradually declined in relevance, ultimately ceasing operations in 2017.",
+			"You're most welcome. Farewell, and may your reminiscences of AIM bring you solace."
+		]
+
+		messages = [
+			"Hey! :D OMG, AIM was like, so iconic, right? Tell me how it all started!",
+			"Woah, that's ancient! :P What was it like in the beginning?",
+			"Sounds lit! XD Did it have those iconic chatrooms from the start?",
+			"That's so cool! :0 How did it evolve over time?",
+			" Aww, RIP AIM! :'( It was such a vibe. Thanks for the history lesson, though! Gonna go cry about the good ol' days now. TTYL!"
+		]
+	elif item_name == "Technician":
+		responses = [
+			"Greetings. I'm here to discuss the technical intricacies of AOL Instant Messenger (AIM) and its features.",
+			"Certainly. AIM was renowned for its diverse array of features, foremost among them being instant messaging, enabling users to exchange text-based messages in real-time with individuals on their contact list.",
+			"In addition to basic messaging, AIM boasted features such as chatrooms, where users could engage in group discussions centered around specific topics of interest. Furthermore, it facilitated file sharing, enabling users to exchange documents, images, and multimedia files effortlessly.",
+			"Indeed, AIM was at the forefront of innovation in its time. It introduced voice and video chat capabilities, allowing users to communicate using audio and video streams, thereby enhancing the richness of their interactions.",
+			"Certainly. AIM offered customizable user profiles, allowing individuals to personalize their presence on the platform with avatars, status messages, and profile information. Additionally, it incorporated buddy lists and status indicators, enabling users to monitor the online presence of their contacts and initiate conversations accordingly.",
+			"You're welcome. Should you have any further inquiries regarding AIM or other technical matters, do not hesitate to reach out."
 		]
 		messages = [
-			"I would love to know about AOL IM.",
-			"Thanks, that is really helpful..."
+			"Hey there! AIM was like, my jam back in the day :P. Tell me all about its features!",
+			"Oh yeah, I remember that! It was so convenient. XD What else did it offer?",
+			"That's rad! I used to hang out in those chatrooms all the time. Did it have anything else?",
+			"Wow, that's advanced stuff! :D AIM was way ahead of its time. Any other cool features?",
+			"Awesome! :0 I miss those features. AIM was the bomb. Thanks for the info, dude!"
+		]
+	elif item_name == "Anthropologist":
+		responses = [
+			"I am prepared to delve into the cultural impact of AOL Instant Messenger (AIM), with a particular focus on its distinctive feature: away messages.",
+			"Certainly. Away messages on AIM served as a unique form of self-expression and communication. Users utilized them to convey their current status, mood, or activities to their contacts when they were not actively engaged in conversations.",
+			"Away messages became a canvas for creativity and wit, allowing individuals to showcase their personality, sense of humor, or current interests through cleverly crafted messages, song lyrics, quotes, or anecdotes. They fostered a sense of community and connection among users, providing glimpses into each other's lives and facilitating conversations.",
+			"Indeed, away messages also played a role in social dynamics and communication etiquette. They signaled to others whether a user was available for conversation or not, thereby influencing the timing and nature of interactions. Additionally, they often sparked curiosity or conversation when they were particularly intriguing or cryptic.",
+			"Away messages encapsulated the spirit of the early internet era, characterized by a blend of informality, creativity, and spontaneity. They became emblematic of online culture during that time, leaving an indelible mark on the digital landscape and influencing subsequent forms of online expression.",
+			"You're welcome. Should you have any further inquiries about AIM or other cultural phenomena, feel free to ask."
+		]
+		messages = [
+			"Hey! AIM was like, my childhood! XP I loved setting away messages. Tell me how they shaped our culture!",
+			"Yeah, I remember. It was like a mini-blog before blogs were a thing! How did they influence our culture? :0",
+			"Totally! I loved reading my friends' away messages. X) It was like a window into their souls. :0 Did they have any deeper significance?",
+			"Ah, that makes sense! :) Away messages were like our status updates before social media took over. Anything else noteworthy about them?",
+			"Wow, I never realized how deep they were! Thanks for enlightening me ttyl!"
+		]
+	elif item_name == "joe1":
+		responses = [
+			"hey! party tonite gonna be so fun!",
+			"fo sho! miss hanging wit everyone. gonna be awesome.",
+			"pick ur outfit yet?",
+			"same lol, gotta find somethin' fresh",
+			"true! what time u heading out?",
+			"sounds good, im down. let's make it a night to remember!"
+		]
+		messages = [
+			"yo!! so excited! haven't seen u in a bit",
+			"yeah, been ages. gonna be gr8!",
+			"nah, still deciding lol",
+			"haha we're so on our game.",
+			"thinkin' 'bout 9, u?"
+		]
+	elif item_name == "cyberninja82":
+		responses = [
+			"Hey there! How's it going?",
+			"Good, thanks! What's up with you?",
+			"Not much, just wanted to see if you're free tonight.",
+			"Yeah, I'm free. What's going on?",
+			"Thinking of having a movie night. You in?",
+			"Definitely! It's been ages since we've had one.",
+			"I know, right? Any movie preferences?",
+			"Hmm, maybe a comedy or action flick?",
+			"Sounds good to me. What time should we start?",
+			"Works for me. Can't wait!",
+			"Same here! It's gonna be a blast."
+		]
+		messages = [
+			"Hey! I'm doing well, thanks for asking. How about you?",
+			"Doing great, thanks! Just relaxing at home.",
+			"Nice! Got any plans for tonight?",
+			"Not really, just chilling. What's up?",
+			"Thinking of hosting a movie night. Interested?",
+			"Absolutely! Movie nights are always fun.",
+			"Totally agree! Any movie preferences?",
+			"I'm up for anything, but maybe a comedy?",
+			"How about starting around 7?",
+			"Sounds perfect! Looking forward to it.",
 		]
 	else:
 		responses = [
-			"not implemented!",
-			"still not implemented"
+			"Hey! How's your day?",
+			"Pretty good! Yours?",
+			"Busy with work, as usual.",
+			"Tell me about it. Any plans tonight?",
+			"Just chilling at home. You?",
+			"Thinking of hitting the café downtown.",
+			"Mind if I join?",
+			"Of course not! Let's meet at 7?",
+			"Sounds good. See you then!"
 		]
 		messages = [
-			"not implemented"
+			"Hey there! It's been pretty good, thanks. What about you?",
+			"Hey! It's been alright, just been busy.",
+			"I understand. Work can be draining sometimes.",
+			"Yeah, it can. I'm just glad it's almost over.",
+			"Same here. Gonna relax at home tonight.",
+			"That sounds nice. I might check out that new café.",
+			"Mind if I tag along?",
+			"Not at all! The more the merrier.",
 		]
 	def update_input(event, name):
 		global msg_counts
@@ -159,7 +254,7 @@ def open_chat(item_name):
 
 				text.configure(state='normal')
 				inputText.delete('1.0', 'end')
-				if msg_counts[name]["n_msg"] > len(messages):
+				if msg_counts[name]["n_res"] <= len(responses):
 					inputText.insert('end', "Please begin typing...", "Prompt")
 				else:
 					inputText.insert('end', "END OF CONVERSATION.", "Prompt")
@@ -168,13 +263,15 @@ def open_chat(item_name):
 				text.insert('end',": " + messages[msg_counts[name]["n_msg"]] + "\n")
 				text.insert('end', name, "Other")
 				text.insert('end', ": " + responses[msg_counts[name]["n_res"]] + "\n")
+				text.yview_moveto(1.0)
 				text.configure(state='disabled')
 
 				msg_counts[name]["i_msg"] = 0
 				msg_counts[name]["n_msg"] += 1
 
 				mixer.init()
-				sound = mixer.Sound("sounds/msg.mp3")
+				sound_path = os.path.join(getattr(sys, '_MEIPASS', os.path.abspath(".")), "sounds", "msg.mp3")
+				sound = mixer.Sound(sound_path)
 				sound.play()
 
 			inputText.configure(state='disabled')
@@ -252,9 +349,6 @@ def open_chat(item_name):
 		chat.protocol("WM_DELETE_WINDOW", lambda: close_chat(chat, item_name))
 		chat.mainloop()
 
-	else:
-		print("The window is already open!")
-
 def close_chat(chat, item_name):
 	open_windows[item_name.lower()] = False
 	chat.destroy()
@@ -287,4 +381,5 @@ if __name__ == "__main__":
 								"n_msg": 0,
 								"n_res": 0},
 				  }
+
 	startup()
